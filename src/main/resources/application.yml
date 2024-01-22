@@ -1,0 +1,20 @@
+quarkus:
+  log:
+    level: INFO
+  http:
+    port: 8790
+    cors:
+      ~: true
+      origins: http://localhost:5173
+      headers: accept, authorization, content-type, x-requested-with
+      methods: GET, OPTIONS, POST, DELETE, PUT, PATCH
+  datasource:
+    db-kind: mysql
+    username: root
+    password: ""
+    jdbc:
+      url: jdbc:mysql://localhost:3306/absensi_ukk
+  hibernate-orm:
+    database:
+      generation:
+        ~: none
