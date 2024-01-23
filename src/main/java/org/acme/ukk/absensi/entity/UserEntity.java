@@ -11,8 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "admin_scanner")
-public class AdminScannerEntity extends PanacheEntityBase {
+@Table(name = "user")
+public class UserEntity extends PanacheEntityBase {
     
     @Id
     @GeneratedValue(generator = "bayu_id_gen")
@@ -28,11 +28,7 @@ public class AdminScannerEntity extends PanacheEntityBase {
     @NotNull
     public String password;
 
-    public static Optional<AdminScannerEntity> findAdminScannerById(Long id) {
-        return find("id =? 1", id).firstResultOptional();
-    } 
-
-    public static Optional<AdminScannerEntity> findAdminByEmailAndPass(String email, String password) {
-        return find("email =? 1 AND password =? 2", email, password).firstResultOptional();
+    public static Optional<UserEntity> findUserByEmailAndPass(String email, String pass) {
+        return find("email =? 1 AND password =? 2", email, pass).firstResultOptional();
     }
 }

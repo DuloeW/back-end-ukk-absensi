@@ -3,10 +3,14 @@ package org.acme.ukk.absensi.entity;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
@@ -27,6 +31,10 @@ public class ImageEntity extends PanacheEntityBase {
     @Column(name = "file", columnDefinition = "blob")
     @NotNull
     public String file;
+
+    @OneToOne(mappedBy = "image")
+    @JsonBackReference
+    public StudentsEntity student;
 
 
     public static Optional<ImageEntity> findImageById(Long id) {

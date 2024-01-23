@@ -21,7 +21,11 @@ public class ImageService {
 
   public Response getImageById(Long id, String authorizationHeader) {
     String token = JwtTokenUtil.convertToken(authorizationHeader);
-    if (JwtTokenUtil.validateToken(token, 1)) {
+    if (
+      JwtTokenUtil.validateToken(token, 1) ||
+      JwtTokenUtil.validateToken(token, 2) ||
+      JwtTokenUtil.validateToken(token, 3)
+    ) {
       var image = ImageEntity
         .findImageById(id)
         .orElseThrow(() -> ResponseMessage.idNotFoundException(id));
@@ -36,7 +40,11 @@ public class ImageService {
 
   public Response getAllImage(String authorizationHeader) {
     String token = JwtTokenUtil.convertToken(authorizationHeader);
-    if (JwtTokenUtil.validateToken(token, 1)) {
+    if (
+      JwtTokenUtil.validateToken(token, 1) ||
+      JwtTokenUtil.validateToken(token, 2) ||
+      JwtTokenUtil.validateToken(token, 3)
+    ) {
       var images = ImageEntity
         .findAllImages()
         .stream()
@@ -54,44 +62,44 @@ public class ImageService {
   public Response uploudFile(String authorizationHeader, ImageBody body) {
     String token = JwtTokenUtil.convertToken(authorizationHeader);
     if (JwtTokenUtil.validateToken(token, 1)) {
-    try {
-      InputStream originalImageStream = body.file;
-      BufferedImage originalImage = ImageIO.read(originalImageStream);
+      try {
+        InputStream originalImageStream = body.file;
+        BufferedImage originalImage = ImageIO.read(originalImageStream);
 
-      // Atur ukuran yang diinginkan
-      int scaledWidth = 300;
-      int scaledHeight = 200;
+        // Atur ukuran yang diinginkan
+        int scaledWidth = 300;
+        int scaledHeight = 200;
 
-      // Buat gambar baru dengan ukuran yang diinginkan
-      BufferedImage resizedImage = new BufferedImage(
-        scaledWidth,
-        scaledHeight,
-        originalImage.getType()
-      );
-      Graphics2D g = resizedImage.createGraphics();
-      g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
-      g.dispose();
+        // Buat gambar baru dengan ukuran yang diinginkan
+        BufferedImage resizedImage = new BufferedImage(
+          scaledWidth,
+          scaledHeight,
+          originalImage.getType()
+        );
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
+        g.dispose();
 
-      ImageEntity imageEntity = body.mapToImageEntity();
+        ImageEntity imageEntity = body.mapToImageEntity();
 
-      // Konversi BufferedImage menjadi byte array
-      ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-      ImageIO.write(resizedImage, "jpg", byteArrayOutputStream);
-      byte[] imageBytes = byteArrayOutputStream.toByteArray();
-      String imageString = Base64.getEncoder().encodeToString(imageBytes);
-      imageEntity.setFile(imageString);
+        // Konversi BufferedImage menjadi byte array
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(resizedImage, "jpg", byteArrayOutputStream);
+        byte[] imageBytes = byteArrayOutputStream.toByteArray();
+        String imageString = Base64.getEncoder().encodeToString(imageBytes);
+        imageEntity.setFile(imageString);
 
-      // Simpan ke dalam basis data
-      imageEntity.persist();
+        // Simpan ke dalam basis data
+        imageEntity.persist();
 
-      return Response
-        .ok(
-          "{\"message\" : \"Gambar berhasil diresize dan disimpan ke dalam database\" }"
-        )
-        .build();
-    } catch (IOException e) {
-      return Response.status(401).build();
-    }
+        return Response
+          .ok(
+            "{\"message\" : \"Gambar berhasil diresize dan disimpan ke dalam database\" }"
+          )
+          .build();
+      } catch (IOException e) {
+        return Response.status(401).build();
+      }
     } else {
       return Response.status(401).build();
     }
