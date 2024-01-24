@@ -33,7 +33,7 @@ public class AbsensiEntity extends PanacheEntityBase{
     @NotNull
     public Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "siswa")
     @JsonBackReference
     @NotNull

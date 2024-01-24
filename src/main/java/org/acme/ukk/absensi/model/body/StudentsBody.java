@@ -7,7 +7,7 @@ import org.acme.ukk.absensi.entity.StudentsEntity;
 import org.acme.ukk.absensi.entity.enums.StudentStatusEnum;
 
 public record StudentsBody(
-  Long nisn,
+  String nisn,
   String name,
   Long classGrade,
   Long image,
