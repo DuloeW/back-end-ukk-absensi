@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.smallrye.common.constraint.NotNull;
 import jakarta.json.bind.annotation.JsonbTransient;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -21,6 +22,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -39,29 +41,32 @@ public class StudentsEntity extends PanacheEntityBase {
     @NotNull
     public String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "kelas")
     // @JsonBackReference
     @JsonIgnoreProperties("students")
     @NotNull
     public ClassEntity classGrade;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @JoinColumn(name = "gambar")
-    @NotNull
-    public ImageEntity image;
-
+    
     @CreationTimestamp
     @Column(name = "tanggal_lahir")
     @NotNull
     public LocalDate dateOfBirth;
-
+    
     @Enumerated
     @Column(name = "status")
     @NotNull
     public StudentStatusEnum status;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JsonManagedReference
+    @JoinColumn(name = "gambar")
+    @NotNull
+    public ImageEntity image;
+    
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    public List<AbsensiEntity> absensi;
 
     public static Optional<StudentsEntity> findStudentsById(Long id) {
         return find("id =? 1", id).firstResultOptional();

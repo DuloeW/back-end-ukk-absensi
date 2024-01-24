@@ -44,7 +44,7 @@ public class ClassEntity extends PanacheEntityBase {
     @NotNull
     public MajorEnum major;
 
-    @OneToMany(mappedBy = "classGrade", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "classGrade", cascade = CascadeType.ALL, orphanRemoval = true)
     // @JsonManagedReference
     // @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<StudentsEntity> students;
