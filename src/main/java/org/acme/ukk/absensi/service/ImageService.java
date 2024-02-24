@@ -17,6 +17,7 @@ import org.acme.ukk.absensi.exceptions.response.ResponseMessage;
 import org.acme.ukk.absensi.model.body.ImageBody;
 
 @ApplicationScoped
+//TODO generate image id response conflig
 public class ImageService {
 
   public Response getImageById(Long id, String authorizationHeader) {
@@ -36,6 +37,10 @@ public class ImageService {
     } else {
       return Response.status(401).build();
     }
+  }
+
+  private boolean checkingImageIsExist(Long id) {
+    return ImageEntity.findImageById(id).isPresent();
   }
 
   public Response getAllImage(String authorizationHeader) {
@@ -94,7 +99,7 @@ public class ImageService {
 
         return Response
           .ok(
-            "{\"message\" : \"Gambar berhasil diresize dan disimpan ke dalam database\" }"
+            ResponseJson.createJson(200, "Success Uplouded", imageEntity)
           )
           .build();
       } catch (IOException e) {
@@ -104,4 +109,12 @@ public class ImageService {
       return Response.status(401).build();
     }
   }
+
+    public Response deleteImageById(Long id) {
+      if(!checkingImageIsExist(id)) {
+        return ResponseMessage.idNotFound(id);
+      }
+      ImageEntity.deleteById(id);
+      return ResponseMessage.deleteSucces(id);
+    }
 }

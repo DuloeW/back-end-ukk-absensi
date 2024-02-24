@@ -1,44 +1,64 @@
 package org.acme.ukk.absensi.controller;
 
-import org.acme.ukk.absensi.model.body.StudentsBody;
-import org.acme.ukk.absensi.service.StudentsService;
-
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.acme.ukk.absensi.model.body.StudentsBody;
+import org.acme.ukk.absensi.service.StudentsService;
 
 @Path("/api/v1/students")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class StudentsContoller {
-    
-    @Inject
-    StudentsService studentsService;
 
-    @GET
-    @Path("/get/{id}")
-    public Response getStudentById(@PathParam("id") Long id) {
-        return studentsService.getStudentById(id);
-    }
+  @Inject
+  StudentsService studentsService;
 
-    @GET
-    @Path("/get/status/active")
-    public Response getStudenstActive() {
-        return studentsService.getStudentsActive();
-    }
+  @GET
+  @Path("/get/{id}")
+  public Response getStudentById(@HeaderParam("Authorization") String authorizationHeader, @PathParam("id") Long id) {
+    return studentsService.getStudentById(authorizationHeader, id);
+  }
 
-    @GET
-    @Path("/get-all")
-    public Response getAllStudent() {
-        return studentsService.getAllStudents();
-    }
+  @GET
+  @Path("/get/status/active")
+  public Response getStudenstActive(@HeaderParam("Authorization") String authorizationHeader) {
+    return studentsService.getStudentsActive(authorizationHeader);
+  }
 
-    @POST
-    @Path("/create")
-    @Transactional
-    public Response createAllStudents(StudentsBody body) {
-        return studentsService.createStudents(body);
-    }
+  @GET
+  @Path("/get/nisn/{nisn}")
+  public Response getStudentByNisn(
+    @HeaderParam("Authorization") String authorizationHeader,
+    @PathParam("nisn") String nisn
+  ) {
+    return studentsService.getStudentByNisn(authorizationHeader, nisn);
+  }
+
+  @GET
+  @Path("/get/name/{name}")
+  public Response getStudentsByName(@PathParam("name") String name) {
+    return studentsService.getStudentsByName(name);
+  }
+
+  @GET
+  @Path("/get-all")
+  public Response getAllStudent(@HeaderParam("Authorization") String authorizationHeader) {
+    return studentsService.getAllStudents(authorizationHeader);
+  }
+
+  @POST
+  @Path("/create")
+  @Transactional
+  public Response createAllStudents(@HeaderParam("Authorization") String authorizationHeader, StudentsBody body) {
+    return studentsService.createStudents(authorizationHeader, body);
+  }
 }

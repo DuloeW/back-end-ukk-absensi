@@ -24,4 +24,13 @@ public enum GradeEnum {
     };
   }
 
+  public static GradeEnum getGradeEnum(String grade) {
+    return switch (grade) {
+      case "X" -> GradeEnum.X;
+      case "XI" -> GradeEnum.XI;
+      case "XII" -> GradeEnum.XII;
+      default -> GradeEnum.NOT_A_CLASS;
+    };
+  }
+
 }

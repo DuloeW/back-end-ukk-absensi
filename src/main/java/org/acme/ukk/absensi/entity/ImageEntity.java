@@ -7,13 +7,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Setter;
 
@@ -25,6 +19,7 @@ import static org.acme.ukk.absensi.core.util.ManipulateUtil.changeItOrNot;
 public class ImageEntity extends PanacheEntityBase {
 
     @Id
+    @GeneratedValue(generator = "bayu_id_gen")
     @Column(name = "id")
     @NotNull
     public Long id;

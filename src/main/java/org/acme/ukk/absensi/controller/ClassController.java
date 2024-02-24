@@ -1,6 +1,7 @@
 package org.acme.ukk.absensi.controller;
 
 import org.acme.ukk.absensi.model.body.ClassBody;
+import org.acme.ukk.absensi.model.body.ClassBodyString;
 import org.acme.ukk.absensi.service.ClassService;
 
 import jakarta.inject.Inject;
@@ -30,6 +31,12 @@ public class ClassController {
     @Path("/get-all")
     public Response getAllClass() {
         return classService.getAllClass();
+    }
+
+    @GET
+    @Path("/get/major")
+    public Response getClassByMajorAndGrade(ClassBodyString body) {
+        return classService.getClassByMajorAndGrade(body);
     }
 
     @POST

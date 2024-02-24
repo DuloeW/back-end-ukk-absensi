@@ -45,7 +45,7 @@ public class ClassEntity extends PanacheEntityBase {
     public MajorEnum major;
 
     @OneToMany(mappedBy = "classGrade", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    // @JsonManagedReference
+//    @JsonIgnoreProperties(value = "classGrade")
     // @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public List<StudentsEntity> students;
 
@@ -53,9 +53,14 @@ public class ClassEntity extends PanacheEntityBase {
         return find("id =? 1", id).firstResultOptional();
     }
 
+    public static Optional<ClassEntity> findClassByMajorAndGrade(MajorEnum major, GradeEnum grade) {
+        return find("major = ? 1 and grade = ? 2", major, grade).firstResultOptional();
+    }
+
 
     public static List<ClassEntity> findAllClass() {
         return ClassEntity.listAll();
     }
+
 
 }

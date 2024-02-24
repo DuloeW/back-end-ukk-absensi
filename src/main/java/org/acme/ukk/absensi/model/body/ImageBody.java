@@ -16,13 +16,6 @@ public class ImageBody {
     public InputStream file;
 
     public ImageEntity mapToImageEntity() {
-        var image = new ImageEntity();
-        image.id = generateId();
-        return image;
-    }
-
-    private Long generateId() {
-        UUID uuid = UUID.randomUUID();
-        return Math.abs(uuid.getMostSignificantBits());
+        return new ImageEntity();
     }
 }

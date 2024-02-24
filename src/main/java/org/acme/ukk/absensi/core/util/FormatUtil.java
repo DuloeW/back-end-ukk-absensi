@@ -1,6 +1,7 @@
 package org.acme.ukk.absensi.core.util;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
@@ -22,6 +23,7 @@ public class FormatUtil {
   }
 
   public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+  private static final String DATE_FORMAT_V2 = "d-MM-yyyy";
 
   /**
    * Mengconvert string date ke bentuk localdate. Hanya menerima format
@@ -37,6 +39,15 @@ public class FormatUtil {
       return LocalDateTime.parse(date, formatter);
     } catch (Exception e) {
       throw new FormatException("Format tanggal harus d-MM-yyy HH:mm:ss. Contoh : 29-08-2002 12:10:00");
+    }
+  }
+
+  public static LocalDate convertStringToLocalDate(String date) {
+    try {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_V2);
+      return LocalDate.parse(date, formatter);
+    } catch (Exception e) {
+      throw new FormatException("\"Format tanggal harus d-MM-yyyy. Contoh : 29-08-2002\"");
     }
   }
 

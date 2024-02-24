@@ -40,6 +40,8 @@ public class ResponseMessage {
       .build();
   }
 
+
+
   public static Response idNotFound(Long id) {
     return Response
       .status(404)
@@ -52,6 +54,23 @@ public class ResponseMessage {
       Response
         .status(404)
         .entity("{\"id\": " + id + ",\n  \t\"message\":\"NOT FOUND\"}")
+        .build()
+    );
+  }
+  public static WebApplicationException classNotFoundException(String major, String grade) {
+    return new WebApplicationException(
+      Response
+        .status(404)
+        .entity("{\"feild\": " + grade + " " + major + ",\n  \t\"message\":\"NOT FOUND\"}")
+        .build()
+    );
+  }
+
+  public static WebApplicationException nisnNotFoundException(String nisn) {
+    return new WebApplicationException(
+      Response
+        .status(404)
+        .entity("{\"nisn\": " + nisn + ",\n  \t\"message\":\"NOT FOUND\"}")
         .build()
     );
   }

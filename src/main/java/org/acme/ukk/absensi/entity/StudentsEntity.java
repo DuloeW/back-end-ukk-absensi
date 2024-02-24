@@ -3,6 +3,7 @@ package org.acme.ukk.absensi.entity;
 import static org.acme.ukk.absensi.core.util.ManipulateUtil.changeItOrNot;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
@@ -47,11 +48,9 @@ public class StudentsEntity extends PanacheEntityBase {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "kelas")
   @JsonIgnoreProperties("students")
-  // @JsonBackReference
   @NotNull
   public ClassEntity classGrade;
 
-  @CreationTimestamp
   @Column(name = "tanggal_lahir")
   @NotNull
   public LocalDate dateOfBirth;
@@ -71,7 +70,7 @@ public class StudentsEntity extends PanacheEntityBase {
     mappedBy = "student",
     cascade = CascadeType.ALL,
     orphanRemoval = true,
-    fetch = FetchType.EAGER
+    fetch = FetchType.LAZY
   )
   @JsonManagedReference
   public List<AbsensiEntity> absensi;
@@ -82,6 +81,14 @@ public class StudentsEntity extends PanacheEntityBase {
 
   public static List<StudentsEntity> findStudentsActive() {
     return find("status = ACTIVE").list();
+  }
+
+  public static Optional<StudentsEntity> findStudentByNisn(String nisn) {
+    return find("nisn = ?1 and status = ACTIVE", nisn).firstResultOptional();
+  }
+
+  public static List<StudentsEntity> findStudentByName(String name) {
+    return find("name like ?1", "%" + name + "%").list();
   }
 
   public static List<StudentsEntity> findAllStudents() {

@@ -29,4 +29,15 @@ public enum MajorEnum {
             default -> MajorEnum.NOT_IDENTIFY;
         };
     }
+    public static MajorEnum getMajorEnum(String major) {
+        return switch(major) {
+            case "TATA BOGA" -> MajorEnum.TATA_BOGA;
+            case "REKAYASA PERANGKAT LUNAK" -> MajorEnum.REKAYASA_PERANGKAT_LUNAK;
+            case "AKUTANSI" -> MajorEnum.AKUTANSI;
+            case "TABEL MANAGER" -> MajorEnum.TABLE_MANAGER;
+            case "DESAIN KOMUNIKASI VISUAL" -> MajorEnum.DESAIN_KOMUNIKASI_VISUAL;
+            case "KULINER" -> MajorEnum.KULINER;
+            default -> MajorEnum.NOT_IDENTIFY;
+        };
+    }
 }
