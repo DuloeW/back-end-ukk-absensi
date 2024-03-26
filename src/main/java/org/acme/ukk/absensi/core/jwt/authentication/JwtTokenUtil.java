@@ -13,7 +13,7 @@ public class JwtTokenUtil {
   private static final String ADMIN_SECRET_KEY = "admin.jwt.service-key.secret.smk.2.tabanan.224";
   private static final String SCANNER_SECRET_KEY = "scanner.jwt.service-key.secret.smk.2.tabanan";
   private static final String USER_SECRET_KEY = "user.jwt.service-key.secret.smk.2.tabanan.20224";
-  private static final long EXPIRATION_TIME = 60000; //60000 864000000 15000
+  private static final long EXPIRATION_TIME = 864000000; //60000 864000000 15000
 
   private JwtTokenUtil() {}
 

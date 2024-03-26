@@ -24,6 +24,9 @@ import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import org.acme.ukk.absensi.entity.enums.GradeEnum;
+import org.acme.ukk.absensi.entity.enums.MajorEnum;
 import org.acme.ukk.absensi.entity.enums.StudentStatusEnum;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -70,7 +73,7 @@ public class StudentsEntity extends PanacheEntityBase {
     mappedBy = "student",
     cascade = CascadeType.ALL,
     orphanRemoval = true,
-    fetch = FetchType.LAZY
+    fetch = FetchType.EAGER
   )
   @JsonManagedReference
   public List<AbsensiEntity> absensi;
@@ -93,6 +96,10 @@ public class StudentsEntity extends PanacheEntityBase {
 
   public static List<StudentsEntity> findAllStudents() {
     return StudentsEntity.listAll();
+  }
+
+  public static List<StudentsEntity> findAllStudentByClass(GradeEnum grade, MajorEnum major) {
+    return find("classGrade.grade = ?1 and classGrade.major = ?2 and status = ACTIVE", grade, major).list();
   }
 
   public StudentsEntity updateStudent(StudentsEntity student) {

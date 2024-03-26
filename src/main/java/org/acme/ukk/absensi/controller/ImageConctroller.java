@@ -6,7 +6,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.io.IOException;
 
+import org.acme.ukk.absensi.entity.ImageEntity;
 import org.acme.ukk.absensi.model.body.ImageBody;
 import org.acme.ukk.absensi.service.ImageService;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
@@ -38,6 +40,15 @@ public class ImageConctroller {
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   public Response uploudImage(@HeaderParam("Authorization") String authorizationHeader, @MultipartForm ImageBody body) {
     return imageService.uploudFile(authorizationHeader, body);
+  }
+
+  @PUT
+  @Path("/update/{id}")
+  @Transactional
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response updateImage(@HeaderParam("Authorization") String authorizationHeader, @MultipartForm ImageBody body, @PathParam("id") Long id) throws IOException {
+    return imageService.updateImage(authorizationHeader, body, id);
   }
 
   @DELETE
