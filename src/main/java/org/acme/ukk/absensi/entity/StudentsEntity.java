@@ -95,7 +95,7 @@ public class StudentsEntity extends PanacheEntityBase {
   }
 
   public static List<StudentsEntity> findAllStudents() {
-    return StudentsEntity.listAll();
+    return find("status = ACTIVE").list();
   }
 
   public static List<StudentsEntity> findAllStudentByClass(GradeEnum grade, MajorEnum major) {

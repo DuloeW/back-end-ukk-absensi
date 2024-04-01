@@ -47,7 +47,7 @@ public class ClassEntity extends PanacheEntityBase {
     @OneToMany(mappedBy = "classGrade", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 //    @JsonIgnoreProperties(value = "classGrade")
     // @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    public List<StudentsEntity> students;
+    public List<StudentsEntity> students;   
 
     public static Optional<ClassEntity> findClassById(Long id) {
         return find("id =? 1", id).firstResultOptional();
