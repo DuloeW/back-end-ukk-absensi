@@ -83,7 +83,7 @@ public class StudentsEntity extends PanacheEntityBase {
   }
 
   public static Optional<StudentsEntity> findStudentByNisn(String nisn) {
-    return find("nisn = ?1 and status = ACTIVE", nisn).firstResultOptional();
+    return find("nisn = ?1", nisn).firstResultOptional();
   }
 
   public static List<StudentsEntity> findStudentByName(String name) {
