@@ -5,7 +5,7 @@ quarkus:
     port: 8790
     cors:
       ~: true
-      origins: http://localhost:5173, http://localhost:5174,  https://6aab-182-253-75-135.ngrok-free.app
+      origins: http://localhost:5173, http://localhost:5174,  https://8d5a-182-253-75-134.ngrok-free.app
       headers: accept, authorization, content-type, x-requested-with
       methods: GET, OPTIONS, POST, DELETE, PUT, PATCH
   datasource:
