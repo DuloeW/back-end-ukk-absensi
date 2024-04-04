@@ -5,12 +5,6 @@ import java.util.Optional;
 
 import org.acme.ukk.absensi.entity.enums.GradeEnum;
 import org.acme.ukk.absensi.entity.enums.MajorEnum;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.smallrye.common.constraint.NotNull;
 import jakarta.persistence.CascadeType;

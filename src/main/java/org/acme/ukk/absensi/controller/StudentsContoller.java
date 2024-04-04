@@ -12,7 +12,6 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.util.List;
 import org.acme.ukk.absensi.entity.StudentsEntity;
 import org.acme.ukk.absensi.model.body.StudentsBody;
 import org.acme.ukk.absensi.service.StudentsService;

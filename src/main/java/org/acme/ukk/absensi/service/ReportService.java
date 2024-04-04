@@ -77,8 +77,12 @@ public class ReportService {
         headerCell.setCellValue("Nama");
         headerCell.setCellStyle(headerStyle);
 
+        headerCell = header.createCell(2);
+        headerCell.setCellValue("Status");
+        headerCell.setCellStyle(headerStyle);
+
         for (int i = 0; i < dates.size(); i++) {
-            headerCell = header.createCell(i + 2);
+            headerCell = header.createCell(i + 3);
             headerCell.setCellValue(dates.get(i).toString());
             headerCell.setCellStyle(headerStyle);
         }
@@ -105,23 +109,28 @@ public class ReportService {
             cell.setCellValue(classEntity.students.get(i).name);
             cell.setCellStyle(style);
 
+            cell = row.createCell(2);
+            cell.setCellValue(classEntity.students.get(i).status.toString());
+            cell.setCellStyle(style);
+
             for (int j = 0; j < dates.size(); j++) {
                 LocalDate currentDate = dates.get(j);
                 List<AbsensiEntity> absensiEntities = fetchAbsensi(currentDate);
                 if (currentDate.getDayOfWeek().equals(DayOfWeek.SATURDAY) || currentDate.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-                    cell = row.createCell(j + 2);
+                    cell = row.createCell(j + 3);
                     cell.setCellValue("LIBUR");
                     cell.setCellStyle(liburStyle);
                     continue;
                 }
                 for (AbsensiEntity absensiEntity : absensiEntities) {
                     if (absensiEntity.student.id.equals(classEntity.students.get(i).id)) {
-                        cell = row.createCell(j + 2);
+                        cell = row.createCell(j + 3);
                         cell.setCellValue(absensiEntity.status.toString());
                         cell.setCellStyle(style);
                     }
                 }
             }
+
         }
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

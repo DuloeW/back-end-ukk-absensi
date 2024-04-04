@@ -9,7 +9,6 @@ import jakarta.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.acme.ukk.absensi.core.util.ResponseJson;
 import org.acme.ukk.absensi.model.body.QrBody;
 import org.acme.ukk.absensi.service.QrService;
 
@@ -39,18 +38,17 @@ public class QrController {
 
     // Return the file as a response with appropriate headers
     return Response
-      .ok((Object) stream)
-      .header(
-        HttpHeaders.CONTENT_DISPOSITION,
-        "attachment; filename=" + body.grade() + body.major()  + ".zip"
-      )
-      .build();
+        .ok((Object) stream)
+        .header(
+            HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=" + body.grade() + body.major() + ".zip")
+        .build();
   }
 
   @GET
   @Path("/download/v2/{grade}/{major}")
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
-  public Response downloadQrCodes(@PathParam("grade")String grade, @PathParam("major")String major) {
+  public Response downloadQrCodes(@PathParam("grade") String grade, @PathParam("major") String major) {
     StreamingOutput stream = new StreamingOutput() {
       @Override
       public void write(OutputStream output) throws IOException {
@@ -66,11 +64,10 @@ public class QrController {
 
     // Return the file as a response with appropriate headers
     return Response
-            .ok((Object) stream)
-            .header(
-                    HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment; filename=" + grade + major  + ".zip"
-            )
-            .build();
+        .ok((Object) stream)
+        .header(
+            HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=" + grade + major + ".zip")
+        .build();
   }
 }
