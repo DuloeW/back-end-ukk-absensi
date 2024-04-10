@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import org.acme.ukk.absensi.model.body.QrBody;
 import org.acme.ukk.absensi.service.QrService;
 
+//TODO Security AUTH
 @Path("/api/v1/qr")
 public class QrController {
 
