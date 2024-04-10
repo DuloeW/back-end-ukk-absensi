@@ -6,6 +6,8 @@ import jakarta.ws.rs.core.Response.Status;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import org.acme.ukk.absensi.core.jwt.authentication.JwtTokenUtil;
 import org.acme.ukk.absensi.core.util.ResponseJson;
 import org.acme.ukk.absensi.entity.AbsensiEntity;
 import org.acme.ukk.absensi.entity.StudentsEntity;
@@ -45,39 +47,64 @@ public class AbsensiService {
       .build();
   }
 
-  public Response getAllAbsensi() {
-    var absensi = AbsensiEntity
-      .findAllAbsen()
-      .stream()
-      .collect(Collectors.toList());
+  public Response getAllAbsensi(String authorizationHeader) {
+    String token = JwtTokenUtil.convertToken(authorizationHeader);
+    boolean admin = JwtTokenUtil.validateToken(token, 1);
+    boolean scanner = JwtTokenUtil.validateToken(token, 2);
+    boolean user = JwtTokenUtil.validateToken(token, 3);
 
-    return Response
-      .ok()
-      .entity(ResponseJson.createJson(200, "Berhasil", absensi))
-      .build();
+    if (admin || user || scanner) {
+      var absensi = AbsensiEntity
+        .findAllAbsen()
+        .stream()
+        .collect(Collectors.toList());
+  
+      return Response
+        .ok()
+        .entity(ResponseJson.createJson(200, "Berhasil", absensi))
+        .build(); 
+    } else {
+      return ResponseMessage.authorizationMessage();
+    }
   }
 
-  public Response getAbsensiTodayByStatus(AbsensiBody body) {
-    var absensi = AbsensiEntity
-      .findAbsensiTodayByStatus(
-        AbsenEnum.getAbsenEnum(body.status()),
-        body.date()
-      )
-      .stream()
-      .collect(Collectors.toList());
-    return Response
-      .ok()
-      .entity(ResponseJson.createJson(200, "Success", absensi))
-      .build();
+  public Response getAbsensiTodayByStatus(AbsensiBody body, String authorizationHeader) {
+    String token = JwtTokenUtil.convertToken(authorizationHeader);
+    boolean admin = JwtTokenUtil.validateToken(token, 1);
+    boolean scanner = JwtTokenUtil.validateToken(token, 2);
+    boolean user = JwtTokenUtil.validateToken(token, 3);
+    if (admin || user || scanner) { 
+      var absensi = AbsensiEntity
+        .findAbsensiTodayByStatus(
+          AbsenEnum.getAbsenEnum(body.status()),
+          body.date()
+        )
+        .stream()
+        .collect(Collectors.toList());
+      return Response
+        .ok()
+        .entity(ResponseJson.createJson(200, "Success", absensi))
+        .build();
+    } else {
+      return ResponseMessage.authorizationMessage();
+    }
   }
 
-  public Response getAbsensiByDate(AbsensiBody body) {
-    var absensi = AbsensiEntity
-      .findAbsensiByDate(body.date())
-      .stream()
-      .collect(Collectors.toList());
-    
-      return Response.ok(absensi).build();
+  public Response getAbsensiByDate(AbsensiBody body, String authorizationHeader) {
+    String token = JwtTokenUtil.convertToken(authorizationHeader);
+    boolean admin = JwtTokenUtil.validateToken(token, 1);
+    boolean scanner = JwtTokenUtil.validateToken(token, 2);
+    boolean user = JwtTokenUtil.validateToken(token, 3);
+    if (admin || user || scanner) {
+      var absensi = AbsensiEntity
+        .findAbsensiByDate(body.date())
+        .stream()
+        .collect(Collectors.toList());
+      
+        return Response.ok(absensi).build();
+    } else {
+      return ResponseMessage.authorizationMessage();
+    }
   }
 
   private AbsensiEntity createRelasi(AbsensiBody body, StudentsEntity student) {
@@ -87,32 +114,48 @@ public class AbsensiService {
     return absensi;
   }
 
-  public Response createAbsensi(AbsensiBody body) {
-    Objects.requireNonNull(body);
-    var student = fetchStudentsEntityByNisn(body.student());
-    boolean absenIsExist = student.absensi
-      .stream()
-      .anyMatch(absen -> absen.date.equals(LocalDate.now()));
-    if (!absenIsExist) {
-      var absensi = createRelasi(body, student);
-      student.persist();
-      return Response
-        .ok()
-        .entity(ResponseJson.createJson(200, "Berhasil Absensi", absensi))
-        .build();
+  public Response createAbsensi(AbsensiBody body, String authorizationHeader) {
+    String token = JwtTokenUtil.convertToken(authorizationHeader);
+    boolean admin = JwtTokenUtil.validateToken(token, 1);
+    boolean scanner = JwtTokenUtil.validateToken(token, 2);
+    boolean user = JwtTokenUtil.validateToken(token, 3);
+    if (admin || user || scanner) {
+      Objects.requireNonNull(body);
+      var student = fetchStudentsEntityByNisn(body.student());
+      boolean absenIsExist = student.absensi
+        .stream()
+        .anyMatch(absen -> absen.date.equals(LocalDate.now()));
+      if (!absenIsExist) {
+        var absensi = createRelasi(body, student);
+        student.persist();
+        return Response
+          .ok()
+          .entity(ResponseJson.createJson(200, "Berhasil Absensi", absensi))
+          .build();
+      } else {
+        return Response
+          .status(Status.BAD_REQUEST)
+          .entity(
+            ResponseJson.createJson(400, "Siswa Sudah Absen Hari Ini!!", null)
+          )
+          .build();
+      }
     } else {
-      return Response
-        .status(Status.BAD_REQUEST)
-        .entity(
-          ResponseJson.createJson(400, "Siswa Sudah Absen Hari Ini!!", null)
-        )
-        .build();
+      return ResponseMessage.authorizationMessage();
     }
   }
 
-  public Response updateAbsensi(AbsensiEntity entity) {
-    var absensi = getAbsensiCoke(entity.id);
-    entity.updateAbsensi(absensi);
-    return Response.ok(absensi).build();
+  public Response updateAbsensi(AbsensiEntity entity, String authorizationHeader) {
+    String token = JwtTokenUtil.convertToken(authorizationHeader);
+    boolean admin = JwtTokenUtil.validateToken(token, 1);
+    boolean scanner = JwtTokenUtil.validateToken(token, 2);
+    boolean user = JwtTokenUtil.validateToken(token, 3);
+    if (admin || user || scanner) {
+      var absensi = getAbsensiCoke(entity.id);
+      entity.updateAbsensi(absensi);
+      return Response.ok(absensi).build();
+    } else {
+      return ResponseMessage.authorizationMessage();
+    }
   }
 }

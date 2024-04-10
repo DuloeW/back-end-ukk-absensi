@@ -7,13 +7,13 @@ import org.acme.ukk.absensi.service.AbsensiService;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.HeaderParam;
 import jakarta.ws.rs.PATCH;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.Response;
 
-import java.time.LocalDate;
 
     @Path("/api/v1/absensi")
 public class AbsensiController {
@@ -29,33 +29,33 @@ public class AbsensiController {
 
     @GET
     @Path("/get-all")
-    public Response getAllAbsensi() {
-        return absensiService.getAllAbsensi();
+    public Response getAllAbsensi(@HeaderParam("Authorization") String authorizationHeader) {
+        return absensiService.getAllAbsensi(authorizationHeader);
     }
 
     @POST
     @Path("/get/status")
-    public Response getAbsensiTodayByStatus(AbsensiBody body) {
-        return absensiService.getAbsensiTodayByStatus(body);
+    public Response getAbsensiTodayByStatus( @HeaderParam("Authorization") String authorizationHeader, AbsensiBody body) {
+        return absensiService.getAbsensiTodayByStatus(body, authorizationHeader);
     }
 
     @POST
     @Path("/get/date")
-    public Response getAbsensiByDate(AbsensiBody body) {
-        return absensiService.getAbsensiByDate(body);
+    public Response getAbsensiByDate( @HeaderParam("Authorization") String authorizationHeader, AbsensiBody body) {
+        return absensiService.getAbsensiByDate(body, authorizationHeader);
     }
 
     @POST
     @Path("/create")
     @Transactional
-    public Response createAbsensi(AbsensiBody body) {
-        return absensiService.createAbsensi(body);
+    public Response createAbsensi( @HeaderParam("Authorization") String authorizationHeader, AbsensiBody body) {
+        return absensiService.createAbsensi(body, authorizationHeader);
     }
 
     @PATCH
     @Path("/update")
     @Transactional
-    public Response updateAbsensi(AbsensiEntity absensi) {
-        return absensiService.updateAbsensi(absensi);
+    public Response updateAbsensi( @HeaderParam("Authorization") String authorizationHeader, AbsensiEntity absensi) {
+        return absensiService.updateAbsensi(absensi, authorizationHeader);
     }
 }
