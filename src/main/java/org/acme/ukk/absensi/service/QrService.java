@@ -18,6 +18,7 @@ import org.acme.ukk.absensi.entity.ClassEntity;
 import org.acme.ukk.absensi.entity.StudentsEntity;
 import org.acme.ukk.absensi.entity.enums.GradeEnum;
 import org.acme.ukk.absensi.entity.enums.MajorEnum;
+import org.acme.ukk.absensi.entity.enums.StudentStatusEnum;
 import org.acme.ukk.absensi.exceptions.response.ResponseMessage;
 import org.acme.ukk.absensi.model.body.ClassBodyString;
 import org.acme.ukk.absensi.model.body.QrBody;
@@ -30,23 +31,22 @@ public class QrService {
     var major = MajorEnum.getMajorEnum(body.major());
     var grade = GradeEnum.getGradeEnum(body.grade());
     return ClassEntity.findClassByMajorAndGrade(major, grade)
-            .orElseThrow(() -> ResponseMessage.classNotFoundException(body.grade(), body.major()));
+        .orElseThrow(() -> ResponseMessage.classNotFoundException(body.grade(), body.major()));
   }
 
   public ClassEntity fetchClass(String major, String grade) {
     var majorParams = MajorEnum.getMajorEnum(major);
     var gradeParams = GradeEnum.getGradeEnum(grade);
     return ClassEntity.findClassByMajorAndGrade(majorParams, gradeParams)
-            .orElseThrow(() -> ResponseMessage.classNotFoundException(grade, major));
+        .orElseThrow(() -> ResponseMessage.classNotFoundException(grade, major));
   }
 
   public byte[] getAllQrImageBuffers(QrBody body) {
     var classGrade = fetchClass(body);
 
     try (
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      ZipOutputStream zos = new ZipOutputStream(baos)
-    ) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ZipOutputStream zos = new ZipOutputStream(baos)) {
       classGrade.students.forEach(student -> {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("nisn", student.nisn);
@@ -57,13 +57,12 @@ public class QrService {
 
         try {
           addToZip(
-            student.name.toLowerCase().replace(" ", "_") +
-            "_" +
-            student.classGrade.major.toString().toLowerCase() +
-            ".png",
-            imageBuf,
-            zos
-          );
+              student.name.toLowerCase().replace(" ", "_") +
+                  "_" +
+                  student.classGrade.major.toString().toLowerCase() +
+                  ".png",
+              imageBuf,
+              zos);
         } catch (IOException e) {
           e.printStackTrace();
         }
@@ -84,28 +83,29 @@ public class QrService {
     var classGrade = fetchClass(major, grade);
 
     try (
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ZipOutputStream zos = new ZipOutputStream(baos)
-    ) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ZipOutputStream zos = new ZipOutputStream(baos)) {
       classGrade.students.forEach(student -> {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("nisn", student.nisn);
+        if (student.status.toString().equals("ACTIVE")) {
 
-        QrCode qr = QrCode.encodeText(jsonObject.toString(), QrCode.Ecc.MEDIUM);
-        BufferedImage image = QrCodeGeneratorDemo.toImage(qr, 20, 4);
-        byte[] imageBuf = convertToByteArray(image);
+          JSONObject jsonObject = new JSONObject();
+          jsonObject.put("nisn", student.nisn);
 
-        try {
-          addToZip(
-                  student.name.toLowerCase().replace(" ", "_") +
-                          "_" +
-                          student.classGrade.major.toString().toLowerCase() +
-                          ".png",
-                  imageBuf,
-                  zos
-          );
-        } catch (IOException e) {
-          e.printStackTrace();
+          QrCode qr = QrCode.encodeText(jsonObject.toString(), QrCode.Ecc.MEDIUM);
+          BufferedImage image = QrCodeGeneratorDemo.toImage(qr, 20, 4);
+          byte[] imageBuf = convertToByteArray(image);
+
+          try {
+            addToZip(
+                student.name.toLowerCase().replace(" ", "_") +
+                    "_" +
+                    student.classGrade.major.toString().toLowerCase() +
+                    ".png",
+                imageBuf,
+                zos);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
         }
       });
 
@@ -134,10 +134,9 @@ public class QrService {
   }
 
   private static void addToZip(
-    String fileName,
-    byte[] buffer,
-    ZipOutputStream zos
-  ) throws IOException {
+      String fileName,
+      byte[] buffer,
+      ZipOutputStream zos) throws IOException {
     try (ByteArrayOutputStream bis = new ByteArrayOutputStream()) {
       ZipEntry zipEntry = new ZipEntry(fileName);
       zos.putNextEntry(zipEntry);

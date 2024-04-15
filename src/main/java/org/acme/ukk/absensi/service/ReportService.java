@@ -116,12 +116,7 @@ public class ReportService {
             for (int j = 0; j < dates.size(); j++) {
                 LocalDate currentDate = dates.get(j);
                 List<AbsensiEntity> absensiEntities = fetchAbsensi(currentDate);
-                if (currentDate.getDayOfWeek().equals(DayOfWeek.SATURDAY) || currentDate.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
-                    cell = row.createCell(j + 3);
-                    cell.setCellValue("LIBUR");
-                    cell.setCellStyle(liburStyle);
-                    continue;
-                }
+                
                 for (AbsensiEntity absensiEntity : absensiEntities) {
                     if (absensiEntity.student.id.equals(classEntity.students.get(i).id)) {
                         cell = row.createCell(j + 3);
